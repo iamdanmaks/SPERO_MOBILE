@@ -17,10 +17,17 @@ import com.google.android.material.navigation.NavigationView
 import okhttp3.ResponseBody
 import com.example.spero.R
 import androidx.annotation.NonNull
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.view.Menu
+import android.widget.AdapterView
+import com.example.spero.helpers.restartActivity
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
 
 
 class MainActivity : AppCompatActivity()
@@ -69,6 +76,57 @@ class MainActivity : AppCompatActivity()
                 false
             }
 
+        override fun onCreateOptionsMenu(menu: Menu): Boolean {
+            menuInflater.inflate(R.menu.main_menu, menu)
+            val item: MenuItem = menu.findItem(R.id.spin_languages)
+
+            val adapter: ArrayAdapter<String> =
+                ArrayAdapter(
+                    this,
+                    R.layout.spinner_item,
+                    LocaleHelper.languages
+                )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            val spinLanguages: Spinner = item.actionView as Spinner
+
+            val current = LocaleHelper.languages.indexOf(lang)
+
+            spinLanguages.adapter = adapter
+
+
+            spinLanguages.setSelection(current)
+
+            spinLanguages.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View,
+                    position: Int, id: Long
+                ) {
+                    if (position != current) {
+                        localeHelper.setLocale(baseContext,LocaleHelper.languages[position])
+                        restartActivity(baseContext, this@MainActivity)
+                    }
+                }
+
+                override fun onNothingSelected(arg0: AdapterView<*>?) {}
+            }
+
+            return true
+        }
+
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+            when (item.itemId) {
+
+                R.id.ll_logout -> {
+                    logout()
+                    return true
+                }
+            }
+
+            return true
+        }
+
     private fun logout() {
         SharedPrefManager.getInstance(this).logout()
         val intent = Intent(this, AuthorizationActivity::class.java)
@@ -81,4 +139,44 @@ class MainActivity : AppCompatActivity()
         fTrans = supportFragmentManager.beginTransaction()
         fTrans.replace(R.id.fl_main, fragment).addToBackStack(null).commit()
     }
+
+        fun onClick(v: View?) {
+            when (v!!.id) {
+                R.id.ll_logout -> logout()
+            }
+        }
+
+        private fun initSpinner() {
+            val adapter: ArrayAdapter<String> =
+                ArrayAdapter(
+                    this,
+                    R.layout.support_simple_spinner_dropdown_item,
+                    LocaleHelper.languages
+                )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            val spinLanguages: Spinner = findViewById(R.id.spin_languages)
+
+            val current = LocaleHelper.languages.indexOf(lang)
+
+            spinLanguages.adapter = adapter
+
+
+            spinLanguages.setSelection(current)
+
+            spinLanguages.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View,
+                    position: Int, id: Long
+                ) {
+                    if (position != current) {
+                        lang = LocaleHelper.languages[position]
+                        localeHelper.setLocale(baseContext, lang)
+                        restartActivity(baseContext,this@MainActivity)
+                    }
+                }
+
+                override fun onNothingSelected(arg0: AdapterView<*>?) {}
+            }
+        }
 }

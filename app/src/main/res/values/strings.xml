@@ -7,7 +7,7 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="submit">Submit</string>
     <string name="username_required">Username required</string>
-    <string name="username_short">Username has to be at least 4 characters</string>
+    <string name="username_short">Username has to be at least 6 characters</string>
     <string name="username_long">Username has to be less than 30 characters long</string>
     <string name="password_short">Password has to be at least 6 characters</string>
     <string name="password_long">Password has to be less than 30 characters long</string>
@@ -28,7 +28,7 @@
     <string name="weight">Weight</string>
     <string name="date_of_birth">Date of birth</string>
     <string name="yyyy_mm_dd">yyyy-mm-dd</string>
-    <string name="ful_name_required">Full name required</string>
+    <string name="ful_name_required">Name required</string>
     <string name="full_name_long">Full name is too long</string>
     <string name="full_name_short">Full name is too short</string>
     <string name="passwords_not_match">Passwords do not match</string>
@@ -65,6 +65,15 @@
     <string name="sm">sm</string>
     <string name="kg">kg</string>
     <string name="weight_">Weight:</string>
-    <string name="fullname">%1s %2s</string>
-    <string name="username_templ">\@%1s</string>
+    <string name="fullname" translatable="false">%1s %2s</string>
+    <string name="username_templ" translatable="false">\@%1s</string>
+    <string name="result">Result:</string>
+    <string name="norm">Normal probability:</string>
+    <string name="murm">Murmurs probability:</string>
+    <string name="extr">Extrasystoles probability:</string>
+    <string name="date">Diagnostics date:</string>
+    <string name="normal">Normal</string>
+    <string name="murmur">Murmur</string>
+    <string name="extrahls">Extrasystoles</string>
+    <string name="logout">Logout</string>
 </resources>

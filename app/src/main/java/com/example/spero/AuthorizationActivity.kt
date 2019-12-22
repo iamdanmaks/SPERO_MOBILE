@@ -39,7 +39,7 @@ class AuthorizationActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.authorization_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         val item: MenuItem = menu.findItem(R.id.spin_languages)
 
         val adapter: ArrayAdapter<String> =
@@ -66,7 +66,7 @@ class AuthorizationActivity : AppCompatActivity() {
             ) {
                 if (position != current) {
                     localeHelper.setLocale(baseContext,LocaleHelper.languages[position])
-                    restartActivity(baseContext)
+                    restartActivity(baseContext, this@AuthorizationActivity)
                 }
             }
 

@@ -1,101 +1,45 @@
 package com.example.spero
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.example.spero.LocaleHelper
+import com.example.spero.R
 import com.example.spero.api.responses.DiagnosticResponse
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [DiagnosticFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [DiagnosticFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class DiagnosticFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+class DiagnosticFragment(private val diagnosticResponse: DiagnosticResponse) :
+    Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_diagnostic, container, false)
-    }
+        val view: View = inflater.inflate(R.layout.fragment_diagnostic, container, false)
+        val tvRes = view.findViewById<TextView>(R.id.tv_res)
+        val tvNorm = view.findViewById<TextView>(R.id.tv_norm)
+        val tvMurm = view.findViewById<TextView>(R.id.tv_murm)
+        val tvExtr = view.findViewById<TextView>(R.id.tv_extr)
+        val tvDate = view.findViewById<TextView>(R.id.tv_date)
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+        tvRes.text =
+            getString(LocaleHelper.disciplineStringResources[diagnosticResponse.result]!!)
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
+        tvNorm.text = diagnosticResponse.normal_probability.toString()
+        tvMurm.text = diagnosticResponse.murmur_probability.toString()
+        tvExtr.text = diagnosticResponse.extrasystole_probability.toString()
+        tvDate.text = diagnosticResponse.checked_on.toString()
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        return view
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DiagnosticFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: DiagnosticResponse, param2: String) =
-            DiagnosticFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1.toString())
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
+        fun newInstance(diagnosticResponse: DiagnosticResponse): DiagnosticFragment {
+            return DiagnosticFragment(diagnosticResponse)
+        }
     }
 }

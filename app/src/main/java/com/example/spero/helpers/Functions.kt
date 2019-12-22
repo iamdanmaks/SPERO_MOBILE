@@ -1,5 +1,6 @@
 package com.example.spero.helpers
 
+import android.app.Activity
 import android.content.Intent
 import android.content.Context
 import com.example.spero.api.RetrofitClient
@@ -14,11 +15,12 @@ fun isAuthenticated(context:Context, callback:RetrofitCallback<OrdinaryResponse>
     val token = SharedPrefManager.getInstance(context).getToken()
 }
 
-fun restartActivity(baseContext:Context){
+fun restartActivity(baseContext:Context,activity: Activity){
     val intent = baseContext.packageManager
         .getLaunchIntentForPackage(baseContext.packageName)
     intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     baseContext.startActivity(intent)
+    activity.finish()
 }
 
 fun getErrorMessageFromJSON(json:String):String{
