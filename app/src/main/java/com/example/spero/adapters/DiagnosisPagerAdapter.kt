@@ -13,7 +13,7 @@ class SportStatsPagerAdapter(
 ) :
     FragmentPagerAdapter(fm!!, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int): Fragment {
-        return DiagnosticFragment.newInstance(diagnosticResponses[position], "")
+        return DiagnosticFragment.newInstance(diagnosticResponses[position])
     }
 
     override fun getCount(): Int {

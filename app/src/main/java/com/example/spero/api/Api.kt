@@ -30,6 +30,6 @@ interface Api {
         @Query("email") email: String
     ): Call<OrdinaryResponse>
 
-    @GET("$diagnosisBase/all")
+    @GET("$diagnosisBase/")
     fun getDiagnoses(): Call<List<DiagnosticResponse>>
 }

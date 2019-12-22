@@ -9,6 +9,11 @@ class LocaleHelper {
 
     companion object {
         val languages = listOf("uk", "en")
+        val disciplineStringResources = mapOf(
+            0 to R.string.normal,
+            1 to R.string.murmur,
+            2 to R.string.extrahls
+        )
     }
 
     fun getLanguage(context: Context): String? {
