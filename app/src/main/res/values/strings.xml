@@ -59,7 +59,12 @@
     <string name="diagnosis">Diagnosis</string>
     <string name="account">Account</string>
     <string name="spero_home">Home</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_">Email:</string>
+    <string name="birthday_">Birthday:</string>
+    <string name="height_">Height:</string>
+    <string name="sm">sm</string>
+    <string name="kg">kg</string>
+    <string name="weight_">Weight:</string>
+    <string name="fullname">%1s %2s</string>
+    <string name="username_templ">\@%1s</string>
 </resources>

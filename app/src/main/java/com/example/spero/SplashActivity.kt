@@ -15,7 +15,7 @@ class SplashActivity : AppCompatActivity() {
         val lang = localHelper.getLanguage(this)
         localHelper.setLocale(baseContext,lang)
 
-        val intent:Intent = if(SharedPrefManager.getInstance(this).isLoggedIn()){
+        val intent:Intent = if(true){
             Intent(this, MainActivity::class.java)
         }else{
             Intent(this, AuthorizationActivity::class.java)

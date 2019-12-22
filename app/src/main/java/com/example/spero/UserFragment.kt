@@ -1,91 +1,140 @@
 package com.example.spero
 
-import android.content.Context
-import android.net.Uri
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.AsyncTask
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.example.spero.api.responses.AvatarResponse
+import com.example.spero.api.responses.UserResponse
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.InputStream
+import java.net.URL
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [UserFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [UserFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class UserFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var user: UserResponse? = null
+    private var userAvatar: AvatarResponse? = null
+    private lateinit var loadingScreen: FrameLayout
+    private lateinit var tvFullName: TextView
+    private lateinit var tvUsername: TextView
+    private lateinit var tvEmail: TextView
+    private lateinit var tvDate: TextView
+    private lateinit var tvHeight: TextView
+    private lateinit var tvWeight: TextView
+
+    private lateinit var avatar: CircleImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false)
+        val view = inflater.inflate(R.layout.fragment_user, container, false)
+
+        avatar = view.findViewById(R.id.civ_profile)
+
+        loadingScreen = activity!!.findViewById(R.id.ls_main)
+
+        tvFullName = view.findViewById(R.id.tv_profile_full_name)
+        tvUsername = view.findViewById(R.id.tv_profile_username)
+        tvEmail = view.findViewById(R.id.tv_profile_email)
+        tvDate = view.findViewById(R.id.tv_profile_birth_date)
+        tvHeight = view.findViewById(R.id.tv_profile_height)
+        tvWeight = view.findViewById(R.id.tv_profile_weight)
+
+        getUser()
+
+        return view
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    private fun getUser() {
+        loadingScreen.visibility = View.VISIBLE
+        //Call to get user
+        //*****************User fetched successfully*****************
+        user = UserResponse(
+            "email@gmail.com",
+            "stalker",
+            "Eugene",
+            "Ostashko",
+            true,
+            true,
+            "2019-01-01",
+            "2000-05-01",
+            179F,
+            70F,
+            true
+        )
+        initUserData()
+        if (user!!.avatar) {
+            getAvatar()
+        } else {
+            loadingScreen.visibility = View.GONE
+        }
+        //*****************User fetched successfully*****************
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
+    private fun getAvatar() {
+        //call to get avatar
+        //*****************Avatar fetched successfully*****************
+        userAvatar = AvatarResponse(
+            "success",
+            "https://301-1.ru/uploads/image/mem-so-shrekom-v-bolote-zaebumba_Iw87RIFG7o.jpeg"
+        )
+        if (userAvatar != null) {
+            initUserAvatar()
+        } else {
+            loadingScreen.visibility = View.GONE
+        }
+        //*****************Avatar fetched successfully*****************
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+    private fun initUserData() {
+        tvFullName.text =
+            String.format(getString(R.string.fullname), user!!.first_name, user!!.second_name)
+
+        tvUsername.text = String.format(getString(R.string.username_templ),user!!.username)
+
+        tvEmail.text = user!!.email
+        tvDate.text = user!!.date_of_birth
+        tvHeight.text = user!!.height.toString()
+        tvWeight.text = user!!.weight.toString()
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment UserFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            UserFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun initUserAvatar() {
+        DownLoadImageTask(avatar, loadingScreen).execute(userAvatar!!.message)
+    }
+
+    private class DownLoadImageTask(
+        private val imageView: CircleImageView,
+        private val loadingScreen: FrameLayout
+    ) :
+        AsyncTask<String?, Void?, Bitmap?>() {
+
+        override fun onPostExecute(result: Bitmap?) {
+            imageView.setImageBitmap(result)
+            loadingScreen.visibility = View.GONE
+        }
+
+        override fun doInBackground(vararg params: String?): Bitmap? {
+            val imageUrl = params[0]
+            var logo: Bitmap? = null
+            try {
+                val `is`: InputStream = URL(imageUrl).openStream()
+
+                logo = BitmapFactory.decodeStream(`is`)
+            } catch (e: Exception) { // Catch the download exception
+                e.printStackTrace()
             }
+            return logo
+        }
+
+
     }
 }
