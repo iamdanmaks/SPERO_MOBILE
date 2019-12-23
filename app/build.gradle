@@ -36,6 +36,7 @@ dependencies {
 
     //Circular ImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
 
     //Toasty
     implementation 'com.github.GrenderG:Toasty:1.4.2'

@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment() {
 
     private lateinit var sportStatsPager: ViewPager
     private lateinit var pagerAdapter: PagerAdapter
@@ -57,12 +57,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        previous = view.findViewById(R.id.iv_previous)
-        previous.setOnClickListener(this)
-        previous.visibility = View.GONE
-
-        next = view.findViewById(R.id.iv_next)
-        next.setOnClickListener(this)
         return view
     }
 
@@ -120,21 +114,5 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private fun initPager() {
         pagerAdapter = SportStatsPagerAdapter(activity!!.supportFragmentManager, sportStats!!)
         sportStatsPager.adapter = pagerAdapter
-    }
-
-    override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.iv_previous -> {
-                currentPage -= 1
-                onPageChanged(currentPage)
-                sportStatsPager.setCurrentItem(currentPage, true)
-            }
-
-            R.id.iv_next -> {
-                currentPage += 1
-                onPageChanged(currentPage)
-                sportStatsPager.setCurrentItem(currentPage, true)
-            }
-        }
     }
 }
