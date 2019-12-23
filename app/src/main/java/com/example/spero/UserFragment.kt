@@ -1,5 +1,6 @@
 package com.example.spero
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
@@ -11,6 +12,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.spero.api.RetrofitClient
+import com.example.spero.api.models.UserData
+import com.example.spero.api.requests.EditProfileRequest
 import com.example.spero.api.responses.AvatarResponse
 import com.example.spero.api.responses.UserResponse
 import com.example.spero.helpers.getErrorMessageFromJSON
@@ -35,6 +38,7 @@ class UserFragment : Fragment() {
     private lateinit var tvDate: TextView
     private lateinit var tvHeight: TextView
     private lateinit var tvWeight: TextView
+    private lateinit var tvEditProfile: TextView
 
     private lateinit var avatar: CircleImageView
 
@@ -54,10 +58,30 @@ class UserFragment : Fragment() {
         tvDate = view.findViewById(R.id.tv_profile_birth_date)
         tvHeight = view.findViewById(R.id.tv_profile_height)
         tvWeight = view.findViewById(R.id.tv_profile_weight)
+        tvEditProfile = view.findViewById(R.id.tv_edit_profile)
+
+        tvEditProfile.setOnClickListener {
+            val intent = Intent(activity!!, EditProfileActivity::class.java)
+            val req = UserData(
+                user!!.first_name,
+                user!!.second_name,
+                user!!.height,
+                user!!.weight,
+                user!!.username,
+                userAvatar!!.message
+            )
+            intent.putExtra(EditProfileActivity.USER_DATA_KEY,req)
+            startActivity(intent)
+        }
 
         getUser()
 
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getUser()
     }
 
     private fun getUser() {
@@ -65,7 +89,7 @@ class UserFragment : Fragment() {
 
         val call = RetrofitClient.getInstance(activity!!).api.getProfile()
 
-        call.enqueue(object : Callback<UserResponse>{
+        call.enqueue(object : Callback<UserResponse> {
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 loadingScreen.visibility = View.GONE
                 Toasty.error(
@@ -95,28 +119,12 @@ class UserFragment : Fragment() {
             }
 
         })
-        //Call to get user
-        //*****************User fetched successfully*****************
-//        user = UserResponse(
-//            "email@gmail.com",
-//            "stalker",
-//            "Eugene",
-//            "Ostashko",
-//            true,
-//            true,
-//            "2019-01-01",
-//            "2000-05-01",
-//            179F,
-//            70F,
-//            true
-//        )
-        //*****************User fetched successfully*****************
     }
 
     private fun getAvatar() {
         val call = RetrofitClient.getInstance(activity!!).api.getAvatar()
 
-        call.enqueue(object : Callback<AvatarResponse>{
+        call.enqueue(object : Callback<AvatarResponse> {
             override fun onFailure(call: Call<AvatarResponse>, t: Throwable) {
                 loadingScreen.visibility = View.GONE
                 Toasty.error(
@@ -143,30 +151,18 @@ class UserFragment : Fragment() {
                         getErrorMessageFromJSON(response.errorBody()!!.string()),
                         Toasty.LENGTH_LONG
                     ).show()
+                    loadingScreen.visibility = View.GONE
                 }
-                loadingScreen.visibility = View.GONE
             }
 
         })
-        //call to get avatar
-        //*****************Avatar fetched successfully*****************
-//        userAvatar = AvatarResponse(
-//            "success",
-//            "https://301-1.ru/uploads/image/mem-so-shrekom-v-bolote-zaebumba_Iw87RIFG7o.jpeg"
-//        )
-//        if (userAvatar != null) {
-//            initUserAvatar()
-//        } else {
-//            loadingScreen.visibility = View.GONE
-//        }
-        //*****************Avatar fetched successfully*****************
     }
 
     private fun initUserData() {
         tvFullName.text =
             String.format(getString(R.string.fullname), user!!.first_name, user!!.second_name)
 
-        tvUsername.text = String.format(getString(R.string.username_templ),user!!.username)
+        tvUsername.text = String.format(getString(R.string.username_templ), user!!.username)
 
         tvEmail.text = user!!.email
         tvDate.text = user!!.date_of_birth
@@ -178,31 +174,29 @@ class UserFragment : Fragment() {
     private fun initUserAvatar() {
         DownLoadImageTask(avatar, loadingScreen).execute(userAvatar!!.message)
     }
+}
 
-    private class DownLoadImageTask(
-        private val imageView: CircleImageView,
-        private val loadingScreen: FrameLayout
-    ) :
-        AsyncTask<String?, Void?, Bitmap?>() {
+class DownLoadImageTask(
+    private val imageView: CircleImageView,
+    private val loadingScreen: FrameLayout
+) :
+    AsyncTask<String?, Void?, Bitmap?>() {
 
-        override fun onPostExecute(result: Bitmap?) {
-            imageView.setImageBitmap(result)
-            loadingScreen.visibility = View.GONE
+    override fun onPostExecute(result: Bitmap?) {
+        imageView.setImageBitmap(result)
+        loadingScreen.visibility = View.GONE
+    }
+
+    override fun doInBackground(vararg params: String?): Bitmap? {
+        val imageUrl = params[0]
+        var logo: Bitmap? = null
+        try {
+            val `is`: InputStream = URL(imageUrl).openStream()
+
+            logo = BitmapFactory.decodeStream(`is`)
+        } catch (e: Exception) { // Catch the download exception
+            e.printStackTrace()
         }
-
-        override fun doInBackground(vararg params: String?): Bitmap? {
-            val imageUrl = params[0]
-            var logo: Bitmap? = null
-            try {
-                val `is`: InputStream = URL(imageUrl).openStream()
-
-                logo = BitmapFactory.decodeStream(`is`)
-            } catch (e: Exception) { // Catch the download exception
-                e.printStackTrace()
-            }
-            return logo
-        }
-
-
+        return logo
     }
 }
