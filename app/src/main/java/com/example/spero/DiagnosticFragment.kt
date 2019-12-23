@@ -26,7 +26,7 @@ class DiagnosticFragment(private val diagnosticResponse: DiagnosticResponse) :
         val tvDate = view.findViewById<TextView>(R.id.tv_date)
 
         tvRes.text =
-            getString(LocaleHelper.disciplineStringResources[diagnosticResponse.result]!!)
+            getString(LocaleHelper.resultStringResources[diagnosticResponse.result.toString()]!!)
 
         tvNorm.text = diagnosticResponse.normal_probability.toString()
         tvMurm.text = diagnosticResponse.murmur_probability.toString()

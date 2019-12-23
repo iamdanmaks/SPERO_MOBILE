@@ -68,9 +68,9 @@
     <string name="fullname" translatable="false">%1s %2s</string>
     <string name="username_templ" translatable="false">\@%1s</string>
     <string name="result">Result:</string>
-    <string name="norm">Normal probability:</string>
-    <string name="murm">Murmurs probability:</string>
-    <string name="extr">Extrasystoles probability:</string>
+    <string name="norm">Normal chance:</string>
+    <string name="murm">Murmurs chance:</string>
+    <string name="extr">"Extrasystoles chance: "</string>
     <string name="date">Diagnostics date:</string>
     <string name="normal">Normal</string>
     <string name="murmur">Murmur</string>

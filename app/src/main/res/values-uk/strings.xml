@@ -67,10 +67,10 @@
     <string name="wrong_email">Неправильна пошта</string>
     <string name="yyyy_mm_dd">рррр-мм-дд</string>
     <string name="result">"Результат: "</string>
-    <string name="norm">"Ймовірність нормального: "</string>
-    <string name="murm">"Ймовірність шумів: "</string>
+    <string name="norm">"Шанс нормального: "</string>
+    <string name="murm">"Шанс шумів: "</string>
     <string name="date">"Дата діагностики: "</string>
-    <string name="extr">"Ймовірність екстрасистолів: "</string>
+    <string name="extr">"Шанс екстрасистів: "</string>
     <string name="normal">Нормальне</string>
     <string name="murmur">Шуми</string>
     <string name="extrahls">Екстрасистоли</string>
