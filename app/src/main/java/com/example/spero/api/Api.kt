@@ -2,10 +2,8 @@ package com.example.spero.api
 
 import com.example.spero.api.requests.LoginRequest
 import com.example.spero.api.requests.RegisterRequest
-import com.example.spero.api.responses.DiagnosticResponse
+import com.example.spero.api.responses.*
 
-import com.example.spero.api.responses.LoginResponse
-import com.example.spero.api.responses.OrdinaryResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -32,4 +30,10 @@ interface Api {
 
     @GET("$diagnosisBase/")
     fun getDiagnoses(): Call<List<DiagnosticResponse>>
+
+    @GET("$usersBase/")
+    fun getProfile(): Call<UserResponse>
+
+    @GET("$editBase/")
+    fun getAvatar(): Call<AvatarResponse>
 }

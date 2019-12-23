@@ -43,7 +43,7 @@ class RetrofitClient(val lang: String, val auth: String?) {
     }
 
     companion object {
-        private const val BASE_URL = "http://192.168.1.3:5000/api/"
+        private const val BASE_URL = "http://192.168.43.252:5000/api/"
         private var mInstance: RetrofitClient? = null
         @Synchronized
         fun getInstance(mCtx: Context): RetrofitClient {
