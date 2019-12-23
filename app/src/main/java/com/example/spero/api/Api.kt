@@ -1,13 +1,14 @@
 package com.example.spero.api
 
+import com.example.spero.api.requests.EditProfileRequest
 import com.example.spero.api.requests.LoginRequest
 import com.example.spero.api.requests.RegisterRequest
-import com.example.spero.api.responses.DiagnosticResponse
-
-import com.example.spero.api.responses.LoginResponse
-import com.example.spero.api.responses.OrdinaryResponse
+import com.example.spero.api.responses.*
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
+
 
 const val usersBase = "user"
 const val authBase = "account"
@@ -32,4 +33,17 @@ interface Api {
 
     @GET("$diagnosisBase/")
     fun getDiagnoses(): Call<List<DiagnosticResponse>>
+
+    @GET("$usersBase/")
+    fun getProfile(): Call<UserResponse>
+
+    @GET("$editBase/")
+    fun getAvatar(): Call<AvatarResponse>
+
+    @PUT("$editBase/edit/")
+    fun editProfile(@Body request:EditProfileRequest) : Call<OrdinaryResponse>
+
+    @Multipart
+    @POST("$editBase/edit/")
+    fun editAvatar(@Part avatar: MultipartBody.Part?): Call<OrdinaryResponse>
 }
