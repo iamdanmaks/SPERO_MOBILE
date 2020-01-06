@@ -2,7 +2,9 @@ package com.example.spero
 
 import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -26,6 +28,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 import java.io.IOException
 
 
@@ -46,6 +49,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var loadingScreen: FrameLayout
     private lateinit var civAvatar: CircleImageView
     private var avatar: Bitmap? = null
+    private var mp = MediaPlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,26 +60,32 @@ class EditProfileActivity : AppCompatActivity() {
         userData = intent.getSerializableExtra(USER_DATA_KEY) as UserData
 
         etName = findViewById(R.id.et_edit_profile_name)
-        etName.setText(userData.name)
+        etName.setHint(userData.name)
 
         etSurname = findViewById(R.id.et_edit_profile_surname)
-        etSurname.setText(userData.surname)
+        etSurname.setHint(userData.surname)
 
         etHeight = findViewById(R.id.et_edit_profile_height)
-        etHeight.setText(userData.height.toString())
+        etHeight.setHint(userData.height.toString())
 
         etWeight = findViewById(R.id.et_edit_profile_weight)
-        etWeight.setText(userData.weight.toString())
+        etWeight.setHint(userData.weight.toString())
 
         etUsername = findViewById(R.id.et_edit_profile_username)
-        etUsername.setText(userData.username)
+        etUsername.setHint(userData.username)
 
         loadingScreen = findViewById(R.id.ls_edit_profile)
         loadingScreen.visibility = View.VISIBLE
 
         civAvatar = findViewById(R.id.civ_edit_profile_avatar)
 
-        DownLoadImageTask(civAvatar, loadingScreen).execute(userData.avatar)
+        val parts = userData.avatar.split("/v").toTypedArray()
+        val rnds = (1..1000000).random().toString()
+        val link = parts[0] + "/v" + rnds + parts[1]
+
+        DownLoadImageTask(civAvatar, loadingScreen).execute(
+            link
+        )
 
         civAvatar.setOnClickListener {
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
@@ -83,6 +93,7 @@ class EditProfileActivity : AppCompatActivity() {
             startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG)
         }
 
+        btEditProfile = findViewById(R.id.bt_edit_profile)
         btEditProfile.setOnClickListener {
             editProfilePressed()
         }
@@ -107,14 +118,52 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    fun getRealPathFromURI(contentUri: Uri): String {
+
+        // can post image
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = managedQuery(
+            contentUri,
+            proj, // WHERE clause selection arguments (none)
+            null, null, null
+        )// Which columns to return
+        // WHERE clause; which rows to return (all rows)
+        // Order-by clause (ascending by name)
+        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+
+        return cursor.getString(column_index)
+    }
+
     private fun editProfilePressed() {
         val name = etName.text.toString()
         val surname = etSurname.text.toString()
-        val height = etHeight.text.toString().toFloat()
-        val weight = etWeight.text.toString().toFloat()
+        val height = etHeight.text.toString()
+        val weight = etWeight.text.toString()
         val username = etUsername.text.toString()
 
-        val request = EditProfileRequest(name, surname, height, weight, username)
+        var heightF: Float? = null
+        var weightF: Float? = null
+        var nameF: String? = null
+        var surnameF: String? = null
+        var usernameF: String? = null
+
+        if (height != "")
+            heightF = height.toFloat()
+
+        if (weight != "")
+            weightF = weight.toFloat()
+
+        if (name != "")
+            nameF = name
+
+        if (surname != "")
+            surnameF = surname
+
+        if (username != "")
+            usernameF = username
+
+        val request = EditProfileRequest(nameF, surnameF, heightF, weightF, usernameF)
 
         if (validateRequest(request)) {
             val call = RetrofitClient.getInstance(this).api.editProfile(request)
@@ -141,7 +190,8 @@ class EditProfileActivity : AppCompatActivity() {
                         ).show()
                         if (avatar != null) {
                             sendAvatar()
-                        } else {
+                        }
+                        else {
                             loadingScreen.visibility = View.GONE
                         }
                     } else {
@@ -182,11 +232,7 @@ class EditProfileActivity : AppCompatActivity() {
                 response: Response<OrdinaryResponse>
             ) {
                 if (response.body() != null) {
-                    Toasty.success(
-                        this@EditProfileActivity,
-                        response.body()!!.message,
-                        Toasty.LENGTH_LONG
-                    ).show()
+
                 } else {
                     Toasty.error(
                         this@EditProfileActivity,
@@ -213,4 +259,6 @@ class EditProfileActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
+
 }

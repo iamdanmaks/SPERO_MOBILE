@@ -75,4 +75,18 @@
     <string name="murmur">Шуми</string>
     <string name="extrahls">Екстрасистоли</string>
     <string name="logout">Вихід</string>
+    <string name="edit_profile">Редагування профілю</string>
+    <string name="edit_your_data">Відредагувати дані...</string>
+    <string name="image_not_picked">Ви не обрали зображення!</string>
+    <string name="name_">"Ім'я: "</string>
+    <string name="play_heartbeat">Програти серцебиття</string>
+    <string name="something_wrong">Щось сталось</string>
+    <string name="surname_">"Прізвище: "</string>
+    <string name="username_">"Користувацьке ім'я: "</string>
+    <string name="connect_to_speroscope">З\'єднатись з SperoScope</string>
+    <string name="play_result">Програти результат</string>
+    <string name="spero_profile">Профіль</string>
+    <string name="spero_diagnosis">Діагноз</string>
+    <string name="don_t_have_an_account">Немає акаунту?</string>
+    <string name="register">Зареєструйтесь</string>
 </resources>

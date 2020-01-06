@@ -179,5 +179,4 @@
         android:text="@string/edit_your_data"
         android:textAllCaps="true"
         android:textSize="24sp" />
-
 </LinearLayout>

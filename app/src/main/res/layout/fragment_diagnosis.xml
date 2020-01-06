@@ -5,12 +5,31 @@
     android:layout_height="match_parent"
     tools:context=".DiagnosisFragment">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <Button
+        android:id="@+id/bt_connect"
         android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_height="65dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_add"
-        />
+        android:text="@string/connect_to_speroscope"/>
+
+    <lecho.lib.hellocharts.view.PieChartView
+        android:id="@+id/chart"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:orientation="vertical">
+
+        <Button
+            android:id="@+id/bt_play"
+            android:layout_width="200dp"
+            android:layout_height="65dp"
+            android:visibility="invisible"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/play_result"/>
+    </LinearLayout>
 
 </FrameLayout>

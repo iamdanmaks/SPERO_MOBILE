@@ -8,6 +8,9 @@ import com.example.spero.api.responses.OrdinaryResponse
 import com.example.spero.storage.SharedPrefManager
 import org.json.JSONObject
 import java.io.*
+import android.media.MediaPlayer
+
+
 
 fun restartActivity(baseContext:Context,activity: Activity){
     val intent = baseContext.packageManager
@@ -27,7 +30,7 @@ fun bitmapToFile(bitmap:Bitmap,context:Context,filename:String = "avatar") : Fil
     file.createNewFile()
 
     val bos = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bos)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
     val bitmapData = bos.toByteArray()
 
     var fos:FileOutputStream? = null

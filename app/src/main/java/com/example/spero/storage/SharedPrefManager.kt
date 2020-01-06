@@ -43,7 +43,7 @@ class SharedPrefManager(private val mCtx: Context) {
 
     fun getAuthToken(): String?{
         val sharedPreferences:SharedPreferences = mCtx.getSharedPreferences(sharedPrefName,
-            Context.MODE_PRIVATE)
+            Context.MODE_WORLD_WRITEABLE)
         var token:String? = sharedPreferences.getString(tokenKey,null)
         if(token != null){
             token = token!!

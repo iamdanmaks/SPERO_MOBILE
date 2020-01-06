@@ -18,9 +18,12 @@ import es.dmoral.toasty.Toasty
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.provider.MediaStore
 
 
-class HomeFragment : Fragment() {
+
+
+class HomeFragment : Fragment(), View.OnClickListener {
 
     private lateinit var sportStatsPager: ViewPager
     private lateinit var pagerAdapter: PagerAdapter
@@ -57,6 +60,13 @@ class HomeFragment : Fragment() {
             }
         })
 
+        previous = view.findViewById(R.id.iv_previous)
+        previous.setOnClickListener(this)
+        previous.visibility = View.GONE
+
+        next = view.findViewById(R.id.iv_next)
+        next.setOnClickListener(this)
+
         return view
     }
 
@@ -76,6 +86,22 @@ class HomeFragment : Fragment() {
             next.visibility = View.GONE
         } else {
             next.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.iv_previous -> {
+                currentPage -= 1
+                onPageChanged(currentPage)
+                sportStatsPager.setCurrentItem(currentPage, true)
+            }
+
+            R.id.iv_next -> {
+                currentPage += 1
+                onPageChanged(currentPage)
+                sportStatsPager.setCurrentItem(currentPage, true)
+            }
         }
     }
 

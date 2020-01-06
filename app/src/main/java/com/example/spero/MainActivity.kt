@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity()
     {
     private lateinit var bottomNavigation: BottomNavigationView
     private var fTrans = supportFragmentManager.beginTransaction()
-    private var lang: String? = null
+    public var lang: String? = null
     private val localeHelper: LocaleHelper = LocaleHelper()
 
     private lateinit var fragmentHome: HomeFragment
