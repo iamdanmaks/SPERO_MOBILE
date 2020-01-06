@@ -3,6 +3,8 @@ package com.example.spero
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +27,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.InputStream
 import java.net.URL
+import java.util.*
 
 
 class UserFragment : Fragment() {
@@ -47,6 +50,7 @@ class UserFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
+        activity!!.title = getString(R.string.spero_profile)
 
         avatar = view.findViewById(R.id.civ_profile)
 
@@ -71,6 +75,7 @@ class UserFragment : Fragment() {
                 userAvatar!!.message
             )
             intent.putExtra(EditProfileActivity.USER_DATA_KEY,req)
+            intent.putExtra("lang", (activity as MainActivity).lang)
             startActivity(intent)
         }
 
@@ -164,15 +169,22 @@ class UserFragment : Fragment() {
 
         tvUsername.text = String.format(getString(R.string.username_templ), user!!.username)
 
+        /*var format = SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ssZ", Locale.getDefault())
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        var result = format.parse(user!!.date_of_birth)*/
+
         tvEmail.text = user!!.email
-        tvDate.text = user!!.date_of_birth
+        tvDate.text = user!!.date_of_birth.substring(0,10)
         tvHeight.text = user!!.height.toString()
         tvWeight.text = user!!.weight.toString()
 
     }
 
     private fun initUserAvatar() {
-        DownLoadImageTask(avatar, loadingScreen).execute(userAvatar!!.message)
+        val parts = userAvatar!!.message.split("/v").toTypedArray()
+        val rnds = (1..1000000).random().toString()
+        val link = parts[0] + "/v" + rnds + parts[1]
+        DownLoadImageTask(avatar, loadingScreen).execute(link)
     }
 }
 

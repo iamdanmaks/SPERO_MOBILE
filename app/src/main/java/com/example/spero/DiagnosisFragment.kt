@@ -1,91 +1,114 @@
 package com.example.spero
 
 import android.content.Context
+import android.graphics.Color
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.core.view.isVisible
+import lecho.lib.hellocharts.model.PieChartData
+import lecho.lib.hellocharts.model.SliceValue
+import lecho.lib.hellocharts.view.PieChartView
+import java.util.*
+import kotlin.concurrent.schedule
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class DiagnosisFragment : Fragment(), View.OnClickListener {
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [DiagnosisFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [DiagnosisFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class DiagnosisFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var btPlay: Button
+    private lateinit var btConnect: Button
+    private var ready: Boolean = false
+    private var playing: Boolean = false
+    private lateinit var media: MediaPlayer
+    private lateinit var pieChartView: PieChartView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_diagnosis, container, false)
+        val view = inflater.inflate(R.layout.fragment_diagnosis, container, false)
+        activity!!.title = getString(R.string.spero_diagnosis)
+
+        btPlay = view.findViewById<Button>(R.id.bt_play)
+        btConnect = view.findViewById<Button>(R.id.bt_connect)
+
+        btPlay.setOnClickListener(this)
+        btConnect.setOnClickListener(this)
+
+        media = MediaPlayer.create(activity, R.raw.heart)
+
+        pieChartView = view.findViewById<PieChartView>(R.id.chart)
+        val pieData = ArrayList<SliceValue>()
+
+        pieData.add(
+            SliceValue(
+                0.57f,
+                Color.GREEN).setLabel(
+                getString(R.string.normal)
+            ))
+
+        pieData.add(
+            SliceValue(
+                0.17f,
+                Color.RED).setLabel(
+                getString(R.string.murmur)
+            ))
+
+        pieData.add(
+            SliceValue(
+                0.26f,
+                Color.MAGENTA).setLabel(
+                getString(R.string.extrahls)
+            ))
+
+        val pieChartData = PieChartData(pieData)
+
+        pieChartData.setHasCenterCircle(true).setCenterText1(
+            getString(R.string.normal)
+        ).setCenterText1FontSize(20).setCenterText1Color(Color.parseColor("#000000"));
+
+        pieChartData.setHasLabels(true).setValueLabelTextSize(14)
+
+        pieChartView.setPieChartData(pieChartData)
+
+        return view
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    override fun onStart() {
+        super.onStart()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DiagnosisFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DiagnosisFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.bt_play -> {
+                if (!playing && ready){
+                    media.start()
+                    playing = true
+                }
+                else {
+                    media.pause()
+                    playing = false
                 }
             }
+            R.id.bt_connect -> {
+                ready = true
+
+                val loadingScreen = activity!!.findViewById<View>(R.id.ls_main)
+                loadingScreen.visibility = View.VISIBLE
+
+                Handler().postDelayed({
+                    btConnect.visibility = View.INVISIBLE
+                    btPlay.visibility = View.VISIBLE
+                    pieChartView.visibility = View.VISIBLE
+                    loadingScreen.visibility = View.GONE
+                }, 35000)
+            }
+        }
     }
 }

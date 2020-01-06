@@ -40,10 +40,10 @@ interface Api {
     @GET("$editBase/")
     fun getAvatar(): Call<AvatarResponse>
 
-    @PUT("$editBase/edit/")
+    @PUT("$editBase/")
     fun editProfile(@Body request:EditProfileRequest) : Call<OrdinaryResponse>
 
     @Multipart
-    @POST("$editBase/edit/")
+    @POST("$editBase/")
     fun editAvatar(@Part avatar: MultipartBody.Part?): Call<OrdinaryResponse>
 }
