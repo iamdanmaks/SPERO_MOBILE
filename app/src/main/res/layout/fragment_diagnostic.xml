@@ -9,8 +9,15 @@
 
     <lecho.lib.hellocharts.view.PieChartView
         android:id="@+id/chart"
-        android:layout_width="300dp"
-        android:layout_height="300dp" />
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
+    <Button
+        android:id="@+id/bt_play"
+        android:layout_width="175dp"
+        android:layout_height="65dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/play_heartbeat"/>
 
     <TableLayout
         android:layout_width="match_parent"

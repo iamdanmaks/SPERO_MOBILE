@@ -83,4 +83,11 @@
     <string name="username_">Username:</string>
     <string name="image_not_picked">You have not picked image!</string>
     <string name="something_wrong">Something went wrong</string>
+    <string name="play_heartbeat">Play heartbeat</string>
+    <string name="play_result">Play result</string>
+    <string name="connect_to_speroscope">Connect to SperoScope</string>
+    <string name="spero_profile">Profile</string>
+    <string name="spero_diagnosis">Diagnosis</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="register">Register</string>
 </resources>
