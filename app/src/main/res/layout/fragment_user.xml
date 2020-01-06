@@ -169,4 +169,15 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_edit_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:gravity="bottom|center_horizontal"
+        android:text="@string/edit_your_data"
+        android:textAllCaps="true"
+        android:textSize="24sp" />
+
 </LinearLayout>

@@ -76,4 +76,11 @@
     <string name="murmur">Murmur</string>
     <string name="extrahls">Extrasystoles</string>
     <string name="logout">Logout</string>
+    <string name="edit_your_data">Edit your data&#8230;</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="name_">Name:</string>
+    <string name="surname_">Surname:</string>
+    <string name="username_">Username:</string>
+    <string name="image_not_picked">You have not picked image!</string>
+    <string name="something_wrong">Something went wrong</string>
 </resources>
